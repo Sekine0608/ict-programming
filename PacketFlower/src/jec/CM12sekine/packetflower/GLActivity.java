@@ -1,8 +1,11 @@
 package jec.CM12sekine.packetflower;
 
 import jec.CM12sekine.packetflower.fireworkelement.FireworkBotan;
+import jec.CM12sekine.packetflower.sounds.SoundPoolManager;
 import android.app.Activity;
+import android.graphics.Color;
 import android.opengl.GLSurfaceView;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -39,7 +42,9 @@ public class GLActivity extends Activity implements Runnable , View.OnTouchListe
     private Thread thread = null ;
     private GLRenderer renderer ;
     private RelativeLayout ui ;
+    private RelativeLayout ui_onoff ;
     private Button button_StartAndStop ;
+    private Button button_debugTextOnOrOff ;
     private MessageBoard messageBoard ;
     //アクティビティ生成時に呼ばれる
     @Override
@@ -60,6 +65,8 @@ public class GLActivity extends Activity implements Runnable , View.OnTouchListe
         super.onCreate(bundle);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        SoundPoolManager.getInstance().initSounds(this) ;
+        
         FrameLayout fl = new FrameLayout(this);
         setContentView(fl);
         TextView message = new TextView(this) ;
@@ -74,20 +81,69 @@ public class GLActivity extends Activity implements Runnable , View.OnTouchListe
         fl.addView(message);
         
         ui = (RelativeLayout)this.getLayoutInflater().inflate(R.layout.ui, null);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(240,240);
-        lp.gravity= Gravity.BOTTOM|Gravity.RIGHT; 
-        ui.setLayoutParams(lp);
+        FrameLayout.LayoutParams ui_lp = new FrameLayout.LayoutParams(240,240);
+        ui_lp.gravity= Gravity.BOTTOM|Gravity.RIGHT; 
+        ui.setLayoutParams(ui_lp);
         fl.addView(ui) ;
 
+        
+        ui_onoff = (RelativeLayout)this.getLayoutInflater().inflate(R.layout.ui_onoff, null) ;
+        FrameLayout.LayoutParams uionoff_lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, 120) ;
+        uionoff_lp.gravity = Gravity.TOP|Gravity.RIGHT ;
+        
+        ((TextView)ui_onoff.findViewById(R.id.button_reset_xy)).setTextColor(0x50ffffff);
+        ui_onoff.findViewById(R.id.button_reset_xy).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				resetRenderXY(); 
+			}
+		});
+        
+        ui_onoff.findViewById(R.id.button_onoff_ui).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				switch(ui.getVisibility()){
+				case View.VISIBLE:
+					ui.setVisibility(View.INVISIBLE);
+					button_StartAndStop.setVisibility(View.INVISIBLE);
+					((TextView)ui_onoff.findViewById(R.id.button_onoff_ui)).setTextColor(0x50ffffff);
+					break; 
+				case View.INVISIBLE:
+					ui.setVisibility(View.VISIBLE);
+					button_StartAndStop.setVisibility(View.VISIBLE);
+					((TextView)ui_onoff.findViewById(R.id.button_onoff_ui)).setTextColor(0xffffffff);
+					break; 
+				}
+			}
+		});
+
+        ui_onoff.findViewById(R.id.button_onoff_text).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				messageBoard.toggleDisplay();
+				if(messageBoard.getDisplay()){
+					((TextView) ui_onoff.findViewById(R.id.button_onoff_text)).setTextColor(0xffffffff);
+				}else{
+					((TextView) ui_onoff.findViewById(R.id.button_onoff_text)).setTextColor(0x50ffffff);
+				}
+			}
+		});
+        fl.addView(ui_onoff);
 
         button_StartAndStop = new Button(this) ;
-        LayoutParams p = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT) ;
-        p.gravity = Gravity.BOTTOM|Gravity.LEFT; 
-        button_StartAndStop.setLayoutParams(p);
+        LayoutParams sas_lp = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT) ;
+        sas_lp.gravity = Gravity.BOTTOM|Gravity.LEFT; 
+        button_StartAndStop.setLayoutParams(sas_lp);
 
         fireworksController.setMessageBoard(messageBoard);
         if(fireworksController.isHalt()){
         	button_StartAndStop.setText("再開");
+   
         }else{
         	button_StartAndStop.setText("停止");
         }
@@ -165,6 +221,14 @@ public class GLActivity extends Activity implements Runnable , View.OnTouchListe
         thread.start();
     }
     
+    public void resetRenderXY(){
+    	renderer.setUserX(0);
+    	renderer.setUserY(0);
+    	renderer.setUserZ(-8);
+    	renderer.setUserTheta(70);
+    	renderer.setUserPhi(0);
+    	    
+    }
     @Override
     public boolean onTouch(View v, MotionEvent event) {
     	// TODO Auto-generated method stub
@@ -279,6 +343,11 @@ public class GLActivity extends Activity implements Runnable , View.OnTouchListe
     public void onResume() {
         Log.v("GLActivity", "onResume()" ); 
 
+        ui.setVisibility(View.VISIBLE);
+		button_StartAndStop.setVisibility(View.VISIBLE);
+		((TextView)ui_onoff.findViewById(R.id.button_onoff_ui)).setTextColor(0xffffffff);
+        
+		resetRenderXY(); 
         super.onResume();
         glView.onResume();
         
@@ -295,28 +364,4 @@ public class GLActivity extends Activity implements Runnable , View.OnTouchListe
         fireworksController.stop();
     }
     
- // オプションメニューが最初に呼び出される時に1度だけ呼び出されます
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // メニューアイテムを追加します
-        menu.add(Menu.NONE, MENU1, Menu.NONE, "デバック文字の表示/非表示");
-        
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    // オプションメニューアイテムが選択された時に呼び出されます
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        boolean ret = true;
-        switch (item.getItemId()) {
-        default:
-            ret = super.onOptionsItemSelected(item);
-            break;
-        case MENU1:
-            ret = true;
-            messageBoard.toggleDisplay();
-            break;
-        }
-       return ret;
-    }
 }

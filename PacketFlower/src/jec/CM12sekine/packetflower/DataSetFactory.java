@@ -12,6 +12,7 @@ import jec.CM12sekine.packetflower.util.Color;
 
 public class DataSetFactory {
 	private static final float TTL_AVERAGE = 100f ;
+	private static final float ETC_TTL_AVERAGE = 250f ;
 	private static final String TAG = "DataSetFactory" ;
 	private static final int TAIL_LIFETIME = 3000;
 	private static final float TCP_LENGTH_AVERAGE = 1500f ;
@@ -36,14 +37,14 @@ public class DataSetFactory {
 	
 
 	static FireworkDataSet[] etc(String parseString,long seed, int totalLength, int ttl, int[] sourceIps, int[] destinationIps, int index){
-		int backMargin = index*3000 ;
+		int backMargin = index*3700 ;
 		FireworkDataSet[] fireworkDataSet = new FireworkDataSet[2] ;
 	
 		float lengthRate = 0.1f + (float)totalLength / TCP_LENGTH_AVERAGE;
 		float firstSpeedRate = 0.1f + (float)totalLength / TCP_LENGTH_AVERAGE;
-		float lifeTimeRate = 0.3f + ttl /TTL_AVERAGE*0.7f ;
+		float lifeTimeRate = 0.3f + ttl /ETC_TTL_AVERAGE*0.7f ;
 		
-		int lifeTime = culcLifeTime(6000, 1000, ttl, TTL_AVERAGE) ;
+		int lifeTime = culcLifeTime(6000, 1000, ttl, ETC_TTL_AVERAGE) ;
         
 		int[] innerChangeColorTimes =culcChangeColorTimes(lifeTimeRate,new int[]{300,1000,4000,6000} );
 
@@ -78,7 +79,7 @@ public class DataSetFactory {
 	
 	
 	static FireworkDataSet[] tcp(String parseString,long seed, int totalLength, int ttl, int[] sourceIps, int[] destinationIps, int index){
-		int backMargin = index*3000 ;
+		int backMargin = index*3700 ;
 		FireworkDataSet[] fireworkDataSet = new FireworkDataSet[3] ;
 	
 		float lengthRate = 0.1f + (float)totalLength / TCP_LENGTH_AVERAGE;
@@ -122,7 +123,7 @@ public class DataSetFactory {
 	
 	
 	static FireworkDataSet[] icmp(String parseString,long seed, int totalLength, int ttl, int[] sourceIps, int[] destinationIps, int index){
-		int backMargin = index*3000 ;
+		int backMargin = index*3700 ;
 		float firstSpeedRate = 0.3f + (float)totalLength / 40 ;
 
 		float startX = ((sourceIps[0] + sourceIps[1])-255) / 100 ;
@@ -156,7 +157,7 @@ public class DataSetFactory {
 		return fireworkDataSet ;
 	}
 	static FireworkDataSet[] udp(String parseString,long seed, int totalLength, int ttl, int[] sourceIps, int[] destinationIps, int index){
-		int backMargin = index*3000 ;
+		int backMargin = index*3700 ;
 		FireworkDataSet[] fireworkDataSet = new FireworkDataSet[4] ;
 	
 		
@@ -169,9 +170,9 @@ public class DataSetFactory {
 
 		int lifeTime = culcLifeTime(4000, 2000, ttl, TTL_AVERAGE) ;
 		float lifeTimeRate = (float)lifeTime/4000 ; 
-		int[] outerChangeColorTimes = culcChangeColorTimes(lifeTimeRate, new int[]{300,2000,3000,4000}) ;
-		int[] innerChangeColorTimes1 = culcChangeColorTimes(lifeTimeRate, new int[]{300,2000,3000,4000}) ;
-		int[] innerChangeColorTimes2 = culcChangeColorTimes(lifeTimeRate, new int[]{300,2000,3000,4000}) ;
+		int[] outerChangeColorTimes = culcChangeColorTimes(lifeTimeRate, new int[]{300,800,1200,3000,4000}) ;
+		int[] innerChangeColorTimes1 = culcChangeColorTimes(lifeTimeRate, new int[]{300,800,1200,3000,4000}) ;
+		int[] innerChangeColorTimes2 = culcChangeColorTimes(lifeTimeRate, new int[]{300,800,1200,3000,4000}) ;
 
 	 	fireworkDataSet[0] = new FireworkDataSet() ;
 		fireworkDataSet[0].setFirework(new FireworkTail(seed, 3000, FireworkTail.QUALITY_MIDDLE,50,startX, startY, startZ, endX,endY,endZ, Color.YELLOW)) ;
@@ -179,18 +180,18 @@ public class DataSetFactory {
 		fireworkDataSet[0].setParseString("蜂" + "\n" + parseString+"seed:" + seed + "\n");
 		
 		fireworkDataSet[1] = new FireworkDataSet() ;
-		fireworkDataSet[1] .setFirework(new FireworkHachi(seed,lifeTime,FireworkHachi.QUALITY_MIDDLE, endX,endY,endZ, 100,outerChangeColorTimes,new Color[]{Color.START_WHITE, Color.LIGHT_YELLOW, Color.CLEAR_RED, Color.END_BLACK})) ;
+		fireworkDataSet[1] .setFirework(new FireworkHachi(seed,lifeTime,FireworkHachi.QUALITY_MIDDLE, endX,endY,endZ, 100,outerChangeColorTimes,new Color[]{Color.START_WHITE, Color.LIGHT_YELLOW, Color.CLEAR_RED, Color.CLEAR_RED,Color.END_BLACK})) ;
 		fireworkDataSet[1].setMargin(3000+backMargin);
 		fireworkDataSet[1].setParseString("蜂" + "\n" + parseString+"seed:" + seed + "\n");
 		
 		fireworkDataSet[2] = new FireworkDataSet() ;
-		fireworkDataSet[2] .setFirework(new FireworkHachi(seed+1,lifeTime,FireworkHachi.QUALITY_MIDDLE, endX,endY,endZ, 100,innerChangeColorTimes1,new Color[]{Color.START_WHITE, Color.LIGHT_YELLOW, Color.CLEAR_GREEN, Color.END_BLACK})) ;
+		fireworkDataSet[2] .setFirework(new FireworkHachi(seed+1,lifeTime,FireworkHachi.QUALITY_MIDDLE, endX,endY,endZ, 100,innerChangeColorTimes1,new Color[]{Color.START_WHITE, Color.LIGHT_YELLOW, Color.CLEAR_GREEN,Color.CLEAR_GREEN, Color.END_BLACK})) ;
 		fireworkDataSet[2].setMargin(3500+backMargin);
 		fireworkDataSet[2].setParseString("蜂" + "\n" + parseString+"seed:" + seed + "\n");
 
 		
 		fireworkDataSet[3] = new FireworkDataSet() ;
-		fireworkDataSet[3] .setFirework(new FireworkHachi(seed+2,lifeTime,FireworkHachi.QUALITY_MIDDLE, endX,endY,endZ, 100,innerChangeColorTimes2,new Color[]{Color.START_WHITE, Color.LIGHT_YELLOW, Color.CLEAR_BLUE, Color.END_BLACK})) ;
+		fireworkDataSet[3] .setFirework(new FireworkHachi(seed+2,lifeTime,FireworkHachi.QUALITY_MIDDLE, endX,endY,endZ, 100,innerChangeColorTimes2,new Color[]{Color.START_WHITE, Color.LIGHT_YELLOW, Color.CLEAR_BLUE, Color.CLEAR_BLUE, Color.END_BLACK})) ;
 		fireworkDataSet[3].setMargin(4000+backMargin);
 		fireworkDataSet[3].setParseString("蜂" + "\n" + parseString+"seed:" + seed + "\n");
 		return fireworkDataSet ;

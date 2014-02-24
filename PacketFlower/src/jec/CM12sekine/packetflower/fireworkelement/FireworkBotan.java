@@ -12,6 +12,8 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 public class FireworkBotan extends Firework implements Runnable{
+	private boolean isAfterFirstDraw = false ;
+	
 	private long seed ;
 	private int lifeMilliTime = 0; //破裂後の描写時間
 	private long startPacketFlowerSystemTime = -1 ;
@@ -63,6 +65,7 @@ public class FireworkBotan extends Firework implements Runnable{
 	private float startY = 0 ;
 	private float startZ = 0 ;
 	
+	
 	private int[] changeColorTimes ;
 	private Color[] changeColors ;
 	
@@ -100,6 +103,10 @@ public class FireworkBotan extends Firework implements Runnable{
 		}
 		
 		new Thread(this).start();
+	}
+	
+	public boolean isAfterFirstDraw(){
+		return isAfterFirstDraw ;
 	}
 	
 	public void setStartAndEndPacketFlowerSystemTime(long startPacketFlowerSystemTime){
@@ -253,6 +260,7 @@ public class FireworkBotan extends Firework implements Runnable{
 	}
 	public void drawFireworks(int textureId, int time){
 		checkState(); 
+		isAfterFirstDraw = true ;
 		float[] rgba = nowColor(time) ;
 		int scene = time / drawQuality ;
 		int bufIndex = 0 ;

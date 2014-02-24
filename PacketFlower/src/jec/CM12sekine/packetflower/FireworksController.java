@@ -6,12 +6,14 @@ import java.util.Set;
 
 
 
+
 import android.sax.Element;
 import android.util.Log;
 import android.widget.TextView;
 import jec.CM12sekine.packetflower.fireworkelement.*;
 import jec.CM12sekine.packetflower.packet.Packet;
 import jec.CM12sekine.packetflower.packet.PacketDataController;
+import jec.CM12sekine.packetflower.sounds.SoundPoolManager;
 import jec.CM12sekine.packetflower.util.Color;
 import jec.CM12sekine.packetflower.util.SeedGenerator;
 
@@ -128,8 +130,8 @@ public class FireworksController implements Runnable {
             	}
         		String showingMes = "" ;
             	for(int i=showingInfo.size()-1 ; i>= 0; i--	){
-            		showingMes += "------------------" + "\n作品No." + String.format("%1$03d", opusNumer) +   
-            				" " + showingInfo.get(i) ;
+            		showingMes +=   "\n作品No." + String.format("%1$03d", opusNumer) +   
+            				" " + showingInfo.get(i) + "------------------";
             		opusNumer++ ;
             	}
             	messageBoard.setPacketInfo(showingMes) ;
@@ -148,6 +150,15 @@ public class FireworksController implements Runnable {
 				if(t >= endTime){
 					drawingFireworks.remove(i) ;
 				}else if(t >= startTime){
+					if(!ball.isAfterFirstDraw()){
+						//TODO 最初に描画された事を判定し音を再生
+						if(ball instanceof FireworkTail){
+							SoundPoolManager.getInstance().playSound(SoundPoolManager.SOUND_TAIL);
+						}else{
+							SoundPoolManager.getInstance().playSound(SoundPoolManager.SOUND_BOMB);
+						}
+						Log.v(TAG,"first") ;
+					}
 					ball.drawFireworks(textureId, (int)(t - ball.getStartPacketFlowerSystemTime()));
 				}
 				

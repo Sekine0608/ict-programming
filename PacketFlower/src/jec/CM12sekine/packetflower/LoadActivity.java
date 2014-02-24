@@ -51,7 +51,7 @@ public class LoadActivity extends Activity implements OnFileSelectDialogListener
 	public void onClickLoadButton(View view) {
 		String filePath = ((EditText) findViewById(R.id.editText_filePath))
 				.getText().toString();
-		if (!new File(filePath).exists()||filePath.indexOf(".dump")==-1) {
+		if (!new File(filePath).exists()||(filePath.indexOf(".dump")==-1&&filePath.indexOf(".bin")==-1)) {
 			((TextView) findViewById(R.id.errorMessage)).setText("不正なファイルです");
 		} else {
 			PacketDataController p = PacketDataController.getInstance();

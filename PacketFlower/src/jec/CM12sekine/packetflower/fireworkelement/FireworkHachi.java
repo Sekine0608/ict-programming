@@ -12,6 +12,7 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 public class FireworkHachi extends Firework implements Runnable{
+	private boolean isAfterFirstDraw = false ;
 	private long seed ;
 	private int lifeMilliTime = 0; //破裂後の描写時間
 	private long startPacketFlowerSystemTime = -1 ;
@@ -153,6 +154,7 @@ public class FireworkHachi extends Firework implements Runnable{
 	}
 	public void drawFireworks(int textureId, int time){
 		checkState(); 
+		isAfterFirstDraw = true ;
 		//float[] rgba = nowColor(time) ;
 		int scene = time / drawQuality ;
 		int bufIndex = 0 ;
@@ -304,5 +306,11 @@ public class FireworkHachi extends Firework implements Runnable{
 	public long getSeed() {
 		// TODO Auto-generated method stub
 		return seed;
+	}
+
+	@Override
+	public boolean isAfterFirstDraw() {
+		// TODO Auto-generated method stub
+		return isAfterFirstDraw;
 	}
 }

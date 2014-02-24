@@ -16,6 +16,10 @@ public class MessageBoard {
 		this.textMessage = textMessage ;
 	}
 	
+	public boolean getDisplay(){
+		return display ;
+	}
+	
 	public void toggleDisplay(){
 		if(display){
 			
@@ -29,19 +33,23 @@ public class MessageBoard {
 			
 		}else{
 			display = true ;
-			setText(location+packetInfo) ;
+			// setText(location+packetInfo) ;
+			setText(packetInfo) ;
 		}
 	}
 	public void setLocation(String location){
 		if(!this.location.equals(location)){
 			this.location = location ;
-			setText(location+packetInfo) ;
+			// setText(location+packetInfo) ;
+			setText(packetInfo) ;
 		}
 	}
 	public void setPacketInfo(String packetInfo){
 		if(!this.packetInfo.equals(packetInfo)){
 			this.packetInfo = packetInfo ;
-			setText(location+packetInfo) ;
+
+			//setText(location+packetInfo) ;
+			setText(packetInfo) ;
 		}
 		
 	}

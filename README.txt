@@ -1,5 +1,6 @@
-今後時間が空き次第リファクタリングとREADMEの編集を行います。
-
+日本電子専門学校
 関根尚記
-es.project0608@gmail.com
+
+twitter
+@es_project0608
 

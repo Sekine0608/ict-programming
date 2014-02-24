@@ -45,7 +45,7 @@ public class GLRenderer implements
     private float userX = 0 ;
     private float userY = 0 ;
     private float userZ = -8 ;
-    private float userTheta = 90 ;
+    private float userTheta = 70;
     private float userPhi = 0 ;
     
     public GLRenderer(Activity activity, MessageBoard messageBoard) {

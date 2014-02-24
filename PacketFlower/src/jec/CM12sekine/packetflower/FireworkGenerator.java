@@ -78,15 +78,19 @@ public class FireworkGenerator {
 			String name = IPv4Packet.headerName[j]  ;
 			String h = headers[j] ;
 			switch(j){
+			/*
 			case 0: //version
 				h = "" + Integer.parseInt(h,16)  ;
 				break ;
+			*/
 			case 3: // total length
 				h = "" + Integer.parseInt(h,16)  ;
 				break ;
+				/*
 			case 4: //identification
 				h = "" + Integer.parseInt(h,16) ;
 				break ;
+				*/
 			case 6: //ttl
 				h = "" + Integer.parseInt(h,16) ;
 				break ;
@@ -116,7 +120,13 @@ public class FireworkGenerator {
 				h = "" ;
 			}
 			if(name!=null && name!=""){
-				sb.append(name + ":" + h + "\n") ;
+                sb.append(name + ":" + h ) ;
+
+				if(j != 6){
+					sb.append("\n") ;
+				}else if(j == 6){
+					sb.append(" ") ;
+				}
 			}
 		}
 		return sb.toString() ;

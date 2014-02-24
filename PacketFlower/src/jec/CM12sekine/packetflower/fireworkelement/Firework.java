@@ -16,6 +16,7 @@ public abstract class Firework {
 
 	public abstract void drawFireworks(int textureId, int i); 
 	
+	public abstract boolean isAfterFirstDraw() ;
 
 	public abstract long getSeed() ;
 }

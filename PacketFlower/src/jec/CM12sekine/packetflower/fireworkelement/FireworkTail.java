@@ -9,6 +9,7 @@ import jec.CM12sekine.packetflower.GLES;
 import jec.CM12sekine.packetflower.util.Color;
 
 public class FireworkTail extends Firework implements Runnable{
+	private boolean isAfterFirstDraw = false ;
 	private long seed ;
 	private boolean isComplete = false ;
 	private int sceneCount = 0 ;
@@ -169,6 +170,7 @@ public class FireworkTail extends Firework implements Runnable{
 		// TODO Auto-generated method stub
 		int scene = time / drawQuality ;
 		checkState(); 
+		isAfterFirstDraw = true ;
 
 
 		for(int i=0 ; i<pointSize ; i++){
@@ -199,6 +201,11 @@ public class FireworkTail extends Firework implements Runnable{
 		if(startPacketFlowerSystemTime==-1){
 			throw new IllegalStateException("startPacketFlowerSystemTime==-1") ;
 		}
+	}
+	@Override
+	public boolean isAfterFirstDraw() {
+		// TODO Auto-generated method stub
+		return isAfterFirstDraw ;
 	}
 	
 }
